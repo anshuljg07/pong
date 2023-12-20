@@ -13,28 +13,46 @@
     modern systems.
 ]]
 
+push = require 'push' -- turns the 1280 x 720 into a virtual 432 x 243 window
+
+
+
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
+
+VIRTUAL_WIDTH = 432
+VIRTUAL_HEIGHT = 243
 
 --[[
     Runs when the game first starts up, only once; used to initialize the game.
 ]]
 function love.load()
-    love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, {
+    push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         resizable = false,
         vsync = true
     })
 end
 
+function love.keypressed(key)
+    -- keys can be accessed by string name
+    if key == 'escape' then
+        -- function LÖVE gives us to terminate application
+        love.event.quit()
+    end
+end
+
 --[[
     Called after update by LÖVE2D, used to draw anything to the screen, updated or otherwise.
 ]]
 function love.draw()
-    love.graphics.printf(
-        'Hello Pong!',
-        0,
-        WINDOW_HEIGHT / 2 - 6,
-        WINDOW_WIDTH,
-        'center')
+    -- begin rendering at virtual resolution
+    push:apply('start')
+
+    -- condensed onto one line from last example
+    -- note we are now using virtual width and height now for text placement
+    love.graphics.printf('Hello Pong!', 0, VIRTUAL_HEIGHT / 2 - 6, VIRTUAL_WIDTH, 'center')
+
+    -- end rendering at virtual resolution
+    push:apply('end')
 end
