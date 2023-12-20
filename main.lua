@@ -13,6 +13,7 @@
     modern systems.
 ]]
 
+-- https://github.com/Ulydev/push
 push = require 'push' -- turns the 1280 x 720 into a virtual 432 x 243 window
 
 
@@ -27,6 +28,10 @@ VIRTUAL_HEIGHT = 243
     Runs when the game first starts up, only once; used to initialize the game.
 ]]
 function love.load()
+    smallFont = love.graphics.newFont("font.ttf", 10)
+
+    love.graphics.setFont(smallFont)
+
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         resizable = false,
@@ -37,7 +42,6 @@ end
 function love.keypressed(key)
     -- keys can be accessed by string name
     if key == 'escape' then
-        -- function LÖVE gives us to terminate application
         love.event.quit()
     end
 end
@@ -46,13 +50,16 @@ end
     Called after update by LÖVE2D, used to draw anything to the screen, updated or otherwise.
 ]]
 function love.draw()
-    -- begin rendering at virtual resolution
     push:apply('start')
 
-    -- condensed onto one line from last example
-    -- note we are now using virtual width and height now for text placement
+    love.graphics.clear(40 / 255, 45 / 255, 52 / 255, 255 / 255)
+
+    love.graphics.rectangle("fill", 10, 30, 5, 20)                                       -- Left paddle
+    love.graphics.rectangle("fill", VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 50, 5, 20)      -- Right paddle
+    love.graphics.rectangle("fill", VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4) -- Ball
+
+
     love.graphics.printf('Hello Pong!', 0, VIRTUAL_HEIGHT / 2 - 6, VIRTUAL_WIDTH, 'center')
 
-    -- end rendering at virtual resolution
     push:apply('end')
 end
